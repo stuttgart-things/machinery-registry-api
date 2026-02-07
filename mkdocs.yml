@@ -1,0 +1,8 @@
+site_name: machinery-registry-api
+site_description: lightweight machinery inventory API
+
+nav:
+  - Home: index.md
+
+plugins:
+  - techdocs-core

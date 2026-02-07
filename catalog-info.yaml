@@ -1,0 +1,16 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: machinery-registry-api
+  description: lightweight machinery inventory API
+  annotations:
+    github.com/project-slug: stuttgart-things/machinery-registry-api
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - golang
+    - service
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/platform-team
