@@ -1,0 +1,176 @@
+openapi: 3.0.3
+info:
+  title: Machinery Registry API
+  description: Read-only REST API serving the claim inventory from a GitHub-hosted registry.yaml
+  version: "0.1.0"
+servers:
+  - url: http://localhost:8080
+paths:
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      tags:
+        - system
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  timestamp:
+                    type: string
+                    format: date-time
+  /version:
+    get:
+      summary: Version information
+      operationId: getVersion
+      tags:
+        - system
+      responses:
+        "200":
+          description: Build version metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+                  commit:
+                    type: string
+                  buildDate:
+                    type: string
+  /api/v1/claims:
+    get:
+      summary: List claims
+      description: Returns all claims from the registry, optionally filtered by query parameters.
+      operationId: listClaims
+      tags:
+        - claims
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filter by claim category (e.g., cli, infra)
+        - in: query
+          name: template
+          schema:
+            type: string
+          description: Filter by template name (e.g., volumeclaim, harvestervm)
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter by status (e.g., active, inactive)
+        - in: query
+          name: source
+          schema:
+            type: string
+          description: Filter by source (e.g., cli, gitops)
+      responses:
+        "200":
+          description: List of claims
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClaimListResponse"
+        "503":
+          description: Registry not yet loaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/v1/claims/{name}:
+    get:
+      summary: Get claim by name
+      operationId: getClaim
+      tags:
+        - claims
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: The claim name
+      responses:
+        "200":
+          description: Single claim entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClaimEntry"
+        "404":
+          description: Claim not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Registry not yet loaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    ClaimEntry:
+      type: object
+      properties:
+        name:
+          type: string
+          example: hacky
+        template:
+          type: string
+          example: volumeclaim
+        category:
+          type: string
+          example: cli
+        namespace:
+          type: string
+          example: default
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-02-05T10:58:33Z"
+        createdBy:
+          type: string
+          example: patrick
+        source:
+          type: string
+          example: cli
+        repository:
+          type: string
+          example: stuttgart-things/harvester
+        path:
+          type: string
+          example: claims/cli/hacky.yaml
+        status:
+          type: string
+          example: active
+    ClaimListResponse:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          example: claim-registry.io/v1alpha1
+        kind:
+          type: string
+          example: ClaimList
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClaimEntry"
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: claim not found
