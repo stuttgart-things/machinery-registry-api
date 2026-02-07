@@ -1,21 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
+	"github.com/stuttgart-things/machinery-registry-api/cmd"
 )
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
-	if err := run(); err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
-	}
-}
-
-func run() error {
-	fmt.Println("Hello from machinery-registry-api!")
-	return nil
+	cmd.Execute()
 }
