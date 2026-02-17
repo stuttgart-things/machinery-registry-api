@@ -1,0 +1,27 @@
+"""
+Main entry point for machinery-registry-api Kubernetes deployment
+Imports all resources and exports manifests
+"""
+
+import namespace
+import serviceaccount
+import configmap
+import secret
+import deploy
+import service
+import ingress
+import httproute
+
+# Export all manifests (filter out None values)
+manifests = [
+    m for m in [
+        namespace.namespace
+        serviceaccount.serviceAccount
+        configmap.configMap
+        secret.secret
+        deploy.deployment
+        service.service
+        ingress.ingress
+        httproute.httproute
+    ] if m
+]
