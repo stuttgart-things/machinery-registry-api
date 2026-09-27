@@ -1,0 +1,23 @@
+---
+# Builds the image with ko on every PR and push to main. Its success on main
+# is what triggers release.yaml -- same chain as claim-machinery-api.
+name: Build, Push & Scan Container Image
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-ko-build.yaml@main
+    with:
+      runs-on: ubuntu-latest
+    secrets: inherit # pragma: allowlist secret
