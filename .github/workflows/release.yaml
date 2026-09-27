@@ -1,0 +1,33 @@
+---
+# semantic-release on main, then:
+#   - ghcr.io/stuttgart-things/machinery-registry-api:<version>    (ko)
+#   - ghcr.io/stuttgart-things/machinery-registry-api-kustomize:<version>
+#     deployment/ rendered with tests/kcl-deploy-profile.yaml, the OCI
+#     artifact stuttgart-things/flux (apps/machinery-registry-api) consumes
+#   - binaries via goreleaser
+name: Release
+on:
+  workflow_run:
+    workflows: ["Build, Push & Scan Container Image"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: true
+
+jobs:
+  release:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-go-release.yaml@main
+    with:
+      runs-on: ubuntu-latest
+      stage-image: true
+      push-kustomize: true
+      kcl-profile-file: tests/kcl-deploy-profile.yaml
+      kustomize-image-key: config.image
+      kustomize-oci-repo: ghcr.io/stuttgart-things/machinery-registry-api-kustomize
+    secrets: inherit

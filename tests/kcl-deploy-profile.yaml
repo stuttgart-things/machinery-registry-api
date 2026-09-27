@@ -1,0 +1,17 @@
+---
+# Values the release workflow renders deployment/ with, into the
+# machinery-registry-api-kustomize OCI artifact that Flux consumes
+# (stuttgart-things/flux: apps/machinery-registry-api).
+#
+# Deliberately cluster-neutral. The consumer patches the image tag, the
+# registry source and the route per cluster; nothing here names a host.
+# config.image is overridden by the workflow with the released tag.
+config.image: ghcr.io/stuttgart-things/machinery-registry-api:latest
+config.namespace: machinery-registry
+config.registryRepo: stuttgart-things/harvester
+config.registryPath: claims/registry.yaml
+config.registryBranch: main
+config.syncInterval: 60s
+config.logFormat: json
+config.ingressEnabled: false
+config.httpRouteEnabled: false
