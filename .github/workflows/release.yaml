@@ -30,4 +30,4 @@ jobs:
       kcl-profile-file: tests/kcl-deploy-profile.yaml
       kustomize-image-key: config.image
       kustomize-oci-repo: ghcr.io/stuttgart-things/machinery-registry-api-kustomize
-    secrets: inherit
+    secrets: inherit # pragma: allowlist secret
