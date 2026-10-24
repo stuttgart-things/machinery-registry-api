@@ -1,5 +1,13 @@
 # machinery-registry-api
 
+> [!WARNING]
+> **Archived (2026-10-24).** The `registry.yaml` this API serves is no longer
+> maintained by the ordering paths (Backstage `create-vm` / `create-cluster-stack`
+> write XRs straight into `machinery-xrs`). The live claim inventory comes from
+> [stuttgart-things/machinery](https://github.com/stuttgart-things/machinery),
+> which watches the XRs on the management cluster; Backstage's claim picker
+> moves there.
+
 Lightweight, read-only REST API that serves the claim inventory from a GitHub-hosted `registry.yaml`.
 
 Part of the [claim-machinery](https://github.com/stuttgart-things) platform (Phase 2). Periodically syncs the claim registry from a GitHub repository and exposes it via a filtered REST API.
